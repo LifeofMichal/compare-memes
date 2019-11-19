@@ -14,8 +14,8 @@ class MemeGenerator extends Component {
         this.state = {
             url: props.url,
             loading: true,
-            topText: "One does not simply",
-            bottomText: "pick the right mememage",
+            topText: "",
+            bottomText: "",
             randomImg: "",
             allMemeImgs: [],
             searchQuote: "",
@@ -28,11 +28,16 @@ class MemeGenerator extends Component {
         fetch(this.state.url)
             .then(response => response.json())
             .then(response => {
+
+                
+                const randomMeme = this.handleImagePick(response.data.memes)
+
                 this.setState({
                     loading: false,
                     allMemeImgs: response.data.memes,
                     filteredMemes: response.data.memes,
-                    randomImg: response.data.memes[Math.floor(Math.random() * Math.floor(response.data.memes.length))].url
+                    randomImg: randomMeme.url,
+                    topText: randomMeme.name
                 })
             })
             .catch(function (error) {
@@ -50,14 +55,15 @@ class MemeGenerator extends Component {
             })
             if (filteredAMIs.length > 0) {
                 this.setState({
-                    "randomImg": filteredAMIs[0].url,
+                    randomImg: filteredAMIs[0].url,
                     [name]: value,
-                    "filteredMemes": filteredAMIs
+                    topText: filteredAMIs[0].name,
+                    filteredMemes: filteredAMIs
                 })
             } else {
                 this.setState({
                     [name]: value,
-                    "filteredMemes": filteredAMIs
+                    filteredMemes: filteredAMIs
                 })
             }
         } else {
@@ -65,9 +71,17 @@ class MemeGenerator extends Component {
         }
     }
 
+    handleImagePick = (listOfMemes) => {
+        return listOfMemes[Math.floor(Math.random() * Math.floor(listOfMemes.length))]
+    }
+
     rngImg = () => {
+
+        const randomMeme = this.handleImagePick(this.state.allMemeImgs)
+
         this.setState({
-            "randomImg": this.state.allMemeImgs[Math.floor(Math.random() * Math.floor(this.state.allMemeImgs.length))].url
+            randomImg: randomMeme.url,
+            topText: randomMeme.name
         })
     }
 
@@ -83,12 +97,12 @@ class MemeGenerator extends Component {
                 {
                     loading
                         ? <Loading />
-                        : <React.Fragment>
+                        : <>
                             <Display topText={tT} bottomText={bT} randomImg={rI} />
                             <DisplayInfoOne name={pickImage.name} id={pickImage.id} url={pickImage.url} />
                             <DisplayInfoTwo width={pickImage.width} height={pickImage.height} />
                             <DisplayInfoTre boxCount={pickImage.box_count} />
-                        </React.Fragment>
+                        </>
                 }
             </div>
         )
