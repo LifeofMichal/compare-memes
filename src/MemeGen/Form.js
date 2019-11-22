@@ -1,7 +1,7 @@
 import React from "react"
 
 function Form(props) {
-    const { topText: tT, bottomText: bT, handleChange: hC, rngImg: rI } = props
+    const { topText, bottomText, handleChange } = props
 
     return (
         <form className="meme-form">
@@ -9,18 +9,18 @@ function Form(props) {
                 type="text"
                 name="topText"
                 placeholder="Top Text"
-                value={tT}
-                onChange={hC}
+                value={topText}
+                onChange={handleChange}
             />
             <input
                 type="text"
                 name="bottomText"
                 placeholder="Bottom Text"
-                value={bT}
-                onChange={hC}
+                value={bottomText}
+                onChange={handleChange}
             />
 
-            <button type="button" onClick={rI}>Gen</button>
+            <button type="button" name="randomImg" onClick={handleChange}>Gen</button>
         </form>
     )
 }

@@ -2,16 +2,14 @@ import React from "react"
 
 function Select(props) {
 
-    const { randomImg: rI, handleChange: hC, filteredMemes: fMs } = props
+    const { randomImg, handleChange, filteredMemes } = props
 
-    if (fMs.length === 0) {
+    if (filteredMemes.length === 0) {
         return (
             <>
                 <form className="meme-form">
                     <select
-                        value={rI}
-                        onChange={hC}
-                        name="randomImg">
+                        value={randomImg}>
                         {
                             <option>-- no available memes --</option>
                         }
@@ -24,11 +22,11 @@ function Select(props) {
             <>
                 <form className="meme-form">
                     <select
-                        value={rI}
-                        onChange={hC}
-                        name="randomImg">
+                        value={randomImg}
+                        onChange={handleChange}
+                        name="selectedImg">
                         {
-                            fMs.map((meme) =>
+                            filteredMemes.map((meme) =>
                                 <option key={meme.id}
                                     value={meme.url}> {meme.name}
                                 </option>

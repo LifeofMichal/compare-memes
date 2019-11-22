@@ -12,6 +12,7 @@ class MemeGenerator extends Component {
     constructor(props) {
         super()
         this.state = {
+            index: props.index,
             url: props.url,
             loading: true,
             topText: "",
@@ -29,15 +30,12 @@ class MemeGenerator extends Component {
             .then(response => response.json())
             .then(response => {
 
-                
-                const randomMeme = this.handleImagePick(response.data.memes)
-
                 this.setState({
                     loading: false,
                     allMemeImgs: response.data.memes,
                     filteredMemes: response.data.memes,
-                    randomImg: randomMeme.url,
-                    topText: randomMeme.name
+                    randomImg: response.data.memes[this.state.index].url,
+                    topText: response.data.memes[this.state.index].name
                 })
             })
             .catch(function (error) {
@@ -50,14 +48,15 @@ class MemeGenerator extends Component {
         const { name, value } = event.target
 
         if (name === "searchQuote") {
+            
             const filteredAMIs = this.state.allMemeImgs.filter(function (element) {
                 return element.name.toLowerCase().includes(value.toLowerCase())
             })
-            if (filteredAMIs.length > 0) {
+            if (filteredAMIs.length) {
                 this.setState({
                     randomImg: filteredAMIs[0].url,
-                    [name]: value,
                     topText: filteredAMIs[0].name,
+                    [name]: value,
                     filteredMemes: filteredAMIs
                 })
             } else {
@@ -66,39 +65,46 @@ class MemeGenerator extends Component {
                     filteredMemes: filteredAMIs
                 })
             }
-        } else {
-            this.setState({ [name]: value })
+
+        } else if ( name === "randomImg") {
+            const randomMeme = this.state.filteredMemes[Math.floor(Math.random() * Math.floor(this.state.filteredMemes.length))]
+
+            this.setState({
+                topText: randomMeme.name,
+                [name]: randomMeme.url
+            })
+        } else if( name === "selectedImg") {
+            const pickedImg = this.state.filteredMemes.find(element => element.url === value)
+
+            this.setState({ 
+                topText: pickedImg.name, 
+                randomImg: pickedImg.url 
+            })
+        } else if ( name === "topText") {
+            this.setState({ 
+                topText: value
+            })
+        } else if ( name === "bottomText") {
+            this.setState({ 
+                bottomText: value 
+            })
         }
     }
 
-    handleImagePick = (listOfMemes) => {
-        return listOfMemes[Math.floor(Math.random() * Math.floor(listOfMemes.length))]
-    }
-
-    rngImg = () => {
-
-        const randomMeme = this.handleImagePick(this.state.allMemeImgs)
-
-        this.setState({
-            randomImg: randomMeme.url,
-            topText: randomMeme.name
-        })
-    }
-
     render() {
-        const { loading, topText: tT, bottomText: bT, randomImg: rI, allMemeImgs: aMIs, filteredMemes: fMs, searchQuote: sQ } = this.state
-        const pickImage = aMIs.find(element => element.url === rI)
+        const { loading, topText, bottomText, randomImg, allMemeImgs, filteredMemes, searchQuote } = this.state
+        const pickImage = allMemeImgs.find(element => element.url === randomImg)
 
         return (
             <div className="memeGen">
-                <Form topText={tT} bottomText={bT} handleChange={this.handleChange} rngImg={this.rngImg} />
-                <Search searchQuote={sQ} handleChange={this.handleChange} />
-                <Select randomImg={rI} filteredMemes={fMs} searchQuote={sQ} handleChange={this.handleChange} />
+                <Form topText={topText} bottomText={bottomText} handleChange={this.handleChange} />
+                <Search searchQuote={searchQuote} handleChange={this.handleChange} />
+                <Select randomImg={randomImg} filteredMemes={filteredMemes} searchQuote={searchQuote} handleChange={this.handleChange} />
                 {
                     loading
                         ? <Loading />
                         : <>
-                            <Display topText={tT} bottomText={bT} randomImg={rI} />
+                            <Display topText={topText} bottomText={bottomText} randomImg={randomImg} />
                             <DisplayInfoOne name={pickImage.name} id={pickImage.id} url={pickImage.url} />
                             <DisplayInfoTwo width={pickImage.width} height={pickImage.height} />
                             <DisplayInfoTre boxCount={pickImage.box_count} />

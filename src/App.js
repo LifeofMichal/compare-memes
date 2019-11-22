@@ -20,9 +20,9 @@ class App extends Component {
             <div className="App" >
                 
                 <Header />
-                <MemeGenerator url={this.state.url} />
-                <MemeGenerator url={this.state.url} />
-                <MemeGenerator url={this.state.url} />
+                <MemeGenerator index={0} url={this.state.url} />
+                <MemeGenerator index={1} url={this.state.url} />
+                <MemeGenerator index={2} url={this.state.url} />
             
                 <TwitterFollowButton
                     screenName={'TreetHoown'}
