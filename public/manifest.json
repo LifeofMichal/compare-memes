@@ -1,6 +1,6 @@
 {
-  "short_name": "React-jamfor",
-  "name": "Create a react example of the /jamfor page on comviq.se",
+  "short_name": "Compare-memes",
+  "name": "An example app for comparing memes (or any other products really)",
   "icons": [
     {
       "src": "favicon.ico",
