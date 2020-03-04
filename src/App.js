@@ -18,14 +18,14 @@ class App extends Component {
 
         return (
             <div className="App" >
-                
+
                 <Header />
                 <MemeGenerator index={0} url={this.state.url} />
                 <MemeGenerator index={1} url={this.state.url} />
                 <MemeGenerator index={2} url={this.state.url} />
-            
+
                 <TwitterFollowButton
-                    screenName={'TreetHoown'}
+                    screenName={'LifeofMichal'}
                 />
             </div>
         );
