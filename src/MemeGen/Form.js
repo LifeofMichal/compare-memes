@@ -1,7 +1,7 @@
 import React from "react"
 
 function Form(props) {
-    const { topText, bottomText, handleChange } = props
+    const { topText, bottomText, handleChange, numberOfMemes } = props
 
     return (
         <form className="meme-form">
@@ -20,7 +20,12 @@ function Form(props) {
                 onChange={handleChange}
             />
 
-            <button type="button" name="randomImg" onClick={handleChange}>Gen</button>
+            <button
+                type="button"
+                name="randomImg"
+                onClick={handleChange}
+                disabled={!numberOfMemes ? true : false}
+            >Gen</button>
         </form>
     )
 }

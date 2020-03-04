@@ -18,8 +18,8 @@ class MemeGenerator extends Component {
             topText: "",
             bottomText: "",
             randomImg: "",
-            allMemeImgs: [],
             searchQuote: "",
+            allMemeImgs: [],
             filteredMemes: []
         }
     }
@@ -48,7 +48,7 @@ class MemeGenerator extends Component {
         const { name, value } = event.target
 
         if (name === "searchQuote") {
-            
+
             const filteredAMIs = this.state.allMemeImgs.filter(function (element) {
                 return element.name.toLowerCase().includes(value.toLowerCase())
             })
@@ -66,27 +66,30 @@ class MemeGenerator extends Component {
                 })
             }
 
-        } else if ( name === "randomImg") {
-            const randomMeme = this.state.filteredMemes[Math.floor(Math.random() * Math.floor(this.state.filteredMemes.length))]
+        } else if (name === "randomImg") {
+
+            const randomMeme = this.state.filteredMemes[
+                Math.floor(Math.random() * this.state.filteredMemes.length
+                )]
 
             this.setState({
                 topText: randomMeme.name,
                 [name]: randomMeme.url
             })
-        } else if( name === "selectedImg") {
+        } else if (name === "selectedImg") {
             const pickedImg = this.state.filteredMemes.find(element => element.url === value)
 
-            this.setState({ 
-                topText: pickedImg.name, 
-                randomImg: pickedImg.url 
+            this.setState({
+                topText: pickedImg.name,
+                randomImg: pickedImg.url
             })
-        } else if ( name === "topText") {
-            this.setState({ 
+        } else if (name === "topText") {
+            this.setState({
                 topText: value
             })
-        } else if ( name === "bottomText") {
-            this.setState({ 
-                bottomText: value 
+        } else if (name === "bottomText") {
+            this.setState({
+                bottomText: value
             })
         }
     }
@@ -97,7 +100,7 @@ class MemeGenerator extends Component {
 
         return (
             <div className="memeGen">
-                <Form topText={topText} bottomText={bottomText} handleChange={this.handleChange} />
+                <Form topText={topText} bottomText={bottomText} handleChange={this.handleChange} numberOfMemes={filteredMemes.length} />
                 <Search searchQuote={searchQuote} handleChange={this.handleChange} />
                 <Select randomImg={randomImg} filteredMemes={filteredMemes} searchQuote={searchQuote} handleChange={this.handleChange} />
                 {
