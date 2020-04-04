@@ -96,16 +96,17 @@ class MemeGenerator extends Component {
     }
 
     memeData(data) {
-        let moo = []
+        let objectKeysArray = []
 
         let swag = Object.keys(data)
 
         for (let i = 0; i < swag.length; i++) {
-            moo = [...moo, Object.keys(data)[i]]
+            objectKeysArray = [...objectKeysArray, Object.keys(data)[i]]
+            console.log("Object.keys", Object.keys(data)[i])
 
         }
-        console.log(moo)
-        return moo
+        console.log("objectKeysArray", objectKeysArray)
+        return objectKeysArray
     }
 
     render() {
@@ -140,16 +141,29 @@ class MemeGenerator extends Component {
                             )} */}
 
 
-                            {
+                            {/* {
                                 Object.keys(pickImage).map((key, index) =>
                                     <p className="meme borderRed" key={Object.values(pickImage)[index].id}>
                                         <span className="firstToUpper"><b>{key}: </b></span>
                                         {
-                                            Object.values(pickImage)[index].toString().substring(0, 4) == "http"
-                                                ? <a className="textTooLong" href={Object.values(pickImage)[index]}>{Object.values(pickImage)[index]}</a>
-                                                : <span className="textTooLong">{Object.values(pickImage)[index]}</span>
+                                            Object.values(pickImage)[index].toString().substring(0, 4) === "http"
+                                                ? <a href={Object.values(pickImage)[index]}>{Object.values(pickImage)[index]}</a>
+                                                : <span>{Object.values(pickImage)[index]}</span>
                                         }
 
+                                    </p>
+                                )
+                            } */}
+
+                            {
+                                Object.entries(pickImage).map((entry) =>
+                                    <p className="meme borderRed" key={entry[0]}>
+                                        <span className="firstToUpper"><b>{entry[0]}: </b></span>
+                                        {
+                                            entry[1].toString().substring(0, 4) === "http"
+                                                ? <a href={entry[1]}>{entry[1]}</a>
+                                                : <span>{entry[1]}</span>
+                                        }
                                     </p>
                                 )
                             }
