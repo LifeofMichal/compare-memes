@@ -1,6 +1,6 @@
 import React from "react"
 
-function Loading () {
+function Loading() {
     return (
         <h2 className="center">Loading...</h2>
     )
