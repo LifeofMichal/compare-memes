@@ -110,8 +110,6 @@ class MemeGenerator extends Component {
         const { loading, topText, bottomText, randomImg, allMemeImgs, filteredMemes, searchQuote } = this.state
         const pickImage = allMemeImgs.find(element => element.url === randomImg)
 
-
-
         return (
 
             <div className="memeGen">
