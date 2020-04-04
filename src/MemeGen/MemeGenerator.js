@@ -4,9 +4,10 @@ import Form from "./Form"
 import Search from "./Search"
 import Select from "./Select"
 import Display from "./Display"
-import DisplayInfoOne from "./DisplayInfo/DisplayInfoOne"
-import DisplayInfoTwo from "./DisplayInfo/DisplayInfoTwo"
-import DisplayInfoTre from "./DisplayInfo/DisplayInfoTre"
+// import DisplayInfoOne from "./DisplayInfo/DisplayInfoOne"
+// import DisplayInfoTwo from "./DisplayInfo/DisplayInfoTwo"
+// import DisplayInfoTre from "./DisplayInfo/DisplayInfoTre"
+// import InfoRow from "./InfoRow"
 
 class MemeGenerator extends Component {
     constructor(props) {
@@ -94,11 +95,27 @@ class MemeGenerator extends Component {
         }
     }
 
+    memeData(data) {
+        let moo = []
+
+        let swag = Object.keys(data)
+
+        for (let i = 0; i < swag.length; i++) {
+            moo = [...moo, Object.keys(data)[i]]
+
+        }
+        console.log(moo)
+        return moo
+    }
+
     render() {
         const { loading, topText, bottomText, randomImg, allMemeImgs, filteredMemes, searchQuote } = this.state
         const pickImage = allMemeImgs.find(element => element.url === randomImg)
 
+
+
         return (
+
             <div className="memeGen">
                 <Form topText={topText} bottomText={bottomText} handleChange={this.handleChange} numberOfMemes={filteredMemes.length} />
                 <Search searchQuote={searchQuote} handleChange={this.handleChange} />
@@ -106,11 +123,57 @@ class MemeGenerator extends Component {
                 {
                     loading
                         ? <Loading />
-                        : <>
+                        :
+                        <>
                             <Display topText={topText} bottomText={bottomText} randomImg={randomImg} />
-                            <DisplayInfoOne name={pickImage.name} id={pickImage.id} url={pickImage.url} />
-                            <DisplayInfoTwo width={pickImage.width} height={pickImage.height} />
-                            <DisplayInfoTre boxCount={pickImage.box_count} />
+
+
+                            {/* {(this.memeData(pickImage)).map((val, index) =>
+                                <p className="meme borderRed">
+                                    <span className="firstToUpper"><b>{val}</b>: </span>
+                                    {
+                                        (Object.values(pickImage)[index]).toString().substring(0, 4) == "http"
+                                            ? <a href={Object.values(pickImage)[index]}>{Object.values(pickImage)[index]}</a>
+                                            : Object.values(pickImage)[index]
+                                    }
+                                </p>
+                            )} */}
+
+
+                            {
+                                Object.keys(pickImage).map((key, index) =>
+                                    <p className="meme borderRed" key={Object.values(pickImage)[index].id}>
+                                        <span className="firstToUpper"><b>{key}: </b></span>
+                                        {
+                                            Object.values(pickImage)[index].toString().substring(0, 4) == "http"
+                                                ? <a className="textTooLong" href={Object.values(pickImage)[index]}>{Object.values(pickImage)[index]}</a>
+                                                : <span className="textTooLong">{Object.values(pickImage)[index]}</span>
+                                        }
+
+                                    </p>
+                                )
+                            }
+
+                            {/* 
+                            <InfoRow>
+                                <b><a href={pickImage.url}>{pickImage.name}</a></b>
+                            </InfoRow>
+
+                            <InfoRow>
+                                Id: <i>{pickImage.id}</i>
+                            </InfoRow>
+
+                            <InfoRow>
+                                Width: {pickImage.width}
+                            </InfoRow>
+
+                            <InfoRow>
+                                Height: {pickImage.height}
+                            </InfoRow>
+
+                            <InfoRow>
+                                Box_count: {pickImage.box_count}
+                            </InfoRow> */}
                         </>
                 }
             </div>
