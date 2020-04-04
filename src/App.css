@@ -175,6 +175,10 @@ header > p {
   background: #6441A5;
 }
 
+.meme-form > button:disabled {
+    background: #a1a1a1;
+}
+
 .meme-form > input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
 font-family: VT323, monospace;
 font-size: 25px;
