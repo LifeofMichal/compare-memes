@@ -1,4 +1,8 @@
 import React from "react"
+import { connect } from "react-redux"
+import {
+    updateSelectedMeme
+} from "../redux/memeGenerators"
 
 function Form(props) {
     const { topText, bottomText, handleChange, numberOfMemes } = props
@@ -24,10 +28,20 @@ function Form(props) {
                 type="button"
                 name="randomImg"
                 onClick={handleChange}
-                disabled={!numberOfMemes ? true : false}
-            >Gen</button>
+                disabled={!numberOfMemes ? true : false}>Gen
+            </button>
         </form>
     )
 }
 
-export default Form
+function mapStateToProps({ memeGenerators }) {
+    return {
+        memeGenerators: memeGenerators
+    }
+}
+
+const mapDispatchToProps = {
+    updateSelectedMeme: updateSelectedMeme
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Form)

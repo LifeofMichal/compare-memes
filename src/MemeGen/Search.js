@@ -2,7 +2,7 @@ import React from "react"
 
 function Search(props) {
 
-    const { searchQuote: sQ, handleChange: hC } = props
+    const { searchQuote, handleChange } = props
 
     return (
         <form className="meme-form">
@@ -11,8 +11,8 @@ function Search(props) {
                 type="text"
                 name="searchQuote"
                 placeholder="Search by name"
-                value={sQ}
-                onChange={hC}
+                value={searchQuote}
+                onChange={handleChange}
             />
         </form>
     )

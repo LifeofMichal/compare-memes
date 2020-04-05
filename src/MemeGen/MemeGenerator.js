@@ -1,84 +1,110 @@
 import React, { Component } from "react"
+import { connect } from "react-redux"
+import {
+    updateSelectedMeme,
+    updateTopText,
+    updateBottomText,
+    updateSearchQuote,
+    updateFilteredMemesList
+} from "../redux/memeGenerators"
 import Form from "./Form"
 import Search from "./Search"
 import Select from "./Select"
 import Display from "./Display"
 
 class MemeGenerator extends Component {
-    constructor(props) {
-        super()
-        this.state = {
-            loading: true,
-            topText: props.memes[props.index].name,
-            bottomText: "",
-            randomImg: props.memes[props.index].url,
-            searchQuote: "",
-            allMemeImgs: props.memes,
-            filteredMemes: props.memes
-        }
+
+    componentDidMount() {
+        const {
+            index,
+            memes,
+            updateTopText,
+            updateSelectedMeme,
+            updateFilteredMemesList
+        } = this.props
+        updateTopText(index, memes[index].name)
+        updateSelectedMeme(index, memes[index])
+        updateFilteredMemesList(index, memes)
     }
 
     handleChange = (event) => {
         const { name, value } = event.target
+        const {
+            index,
+            memes,
+            updateTopText,
+            updateBottomText,
+            updateSearchQuote,
+            updateSelectedMeme,
+            updateFilteredMemesList
+        } = this.props
+
+        const { filteredMemeList } = this.props.memeGenerators[index]
 
         if (name === "searchQuote") {
-
-            const filteredAMIs = this.state.allMemeImgs.filter(function (element) {
-                return element.name.toLowerCase().includes(value.toLowerCase())
-            })
+            updateSearchQuote(index, value)
+            const filteredAMIs =
+                memes.filter((element) => (
+                    element.name.toLowerCase().includes(value.toLowerCase())
+                ))
             if (filteredAMIs.length) {
-                this.setState({
-                    randomImg: filteredAMIs[0].url,
-                    topText: filteredAMIs[0].name,
-                    [name]: value,
-                    filteredMemes: filteredAMIs
-                })
+                updateFilteredMemesList(index, filteredAMIs)
+                updateSelectedMeme(index, filteredAMIs[0])
+                updateTopText(index, filteredAMIs[0].name)
             } else {
-                this.setState({
-                    [name]: value,
-                    filteredMemes: filteredAMIs
-                })
+                updateFilteredMemesList(index, [])
+                updateTopText(index, "")
             }
-
         } else if (name === "randomImg") {
-
-            const randomMeme = this.state.filteredMemes[
-                Math.floor(Math.random() * this.state.filteredMemes.length
+            const randomMeme = filteredMemeList[
+                Math.floor(Math.random() * filteredMemeList.length
                 )]
-
-            this.setState({
-                topText: randomMeme.name,
-                [name]: randomMeme.url
-            })
-        } else if (name === "selectedImg") {
-            const pickedImg = this.state.filteredMemes.find(element => element.url === value)
-
-            this.setState({
-                topText: pickedImg.name,
-                randomImg: pickedImg.url
-            })
+            updateSelectedMeme(index, randomMeme)
+            updateTopText(index, randomMeme.name)
+        } else if (name === "selectedMeme") {
+            const pickedMeme = filteredMemeList.find(element => element.url === value)
+            updateSelectedMeme(index, pickedMeme)
+            updateTopText(index, pickedMeme.name)
         } else if (name === "topText") {
-            this.setState({
-                topText: value
-            })
+            updateTopText(index, value)
         } else if (name === "bottomText") {
-            this.setState({
-                bottomText: value
-            })
+            updateBottomText(index, value)
         }
     }
+
     render() {
-        const { topText, bottomText, randomImg, allMemeImgs, filteredMemes, searchQuote } = this.state
-        const pickImage = allMemeImgs.find(element => element.url === randomImg)
+        const {
+            topText,
+            bottomText,
+            selectedMeme,
+            filteredMemeList,
+            searchQuote
+        } = this.props.memeGenerators[this.props.index]
+        const { index } = this.props
+
         return (
 
-            <div className="memeGen">
-                <Form topText={topText} bottomText={bottomText} handleChange={this.handleChange} numberOfMemes={filteredMemes.length} />
-                <Search searchQuote={searchQuote} handleChange={this.handleChange} />
-                <Select randomImg={randomImg} filteredMemes={filteredMemes} searchQuote={searchQuote} handleChange={this.handleChange} />
-                <Display topText={topText} bottomText={bottomText} randomImg={randomImg} />
+            <>
+                <Form
+                    index={index}
+                    topText={topText}
+                    bottomText={bottomText}
+                    numberOfMemes={filteredMemeList.length}
+                    handleChange={this.handleChange} />
+
+                <Search
+                    searchQuote={searchQuote}
+                    handleChange={this.handleChange} />
+
+                <Select
+                    randomImg={selectedMeme.url}
+                    filteredMemes={filteredMemeList}
+                    searchQuote={searchQuote}
+                    handleChange={this.handleChange} />
+
+                <Display topText={topText} bottomText={bottomText} randomImg={selectedMeme.url} />
                 {
-                    Object.entries(pickImage).map((entry) =>
+                    Object.entries(selectedMeme).map((entry) =>
                         <p className="meme borderRed" key={entry[0]}>
                             <span className="firstToUpper"><b>{entry[0]}: </b>
                                 {
@@ -90,9 +116,23 @@ class MemeGenerator extends Component {
                         </p>
                     )
                 }
-            </div>
+            </>
         )
     }
 }
 
-export default MemeGenerator
+function mapStateToProps({ memeGenerators }) {
+    return {
+        memeGenerators: memeGenerators
+    }
+}
+
+const mapDispatchToProps = {
+    updateTopText: updateTopText,
+    updateBottomText: updateBottomText,
+    updateSearchQuote: updateSearchQuote,
+    updateSelectedMeme: updateSelectedMeme,
+    updateFilteredMemesList: updateFilteredMemesList
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MemeGenerator)

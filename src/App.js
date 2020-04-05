@@ -1,55 +1,58 @@
 import React, { Component } from 'react'
+import { connect } from "react-redux"
+import { fetchMemes, isNotLoading } from "./redux/memeList"
+import { TwitterFollowButton } from 'react-twitter-embed';
+
 import './App.css'
 import Header from "./Header"
 import Loading from "./Loading"
 import MemeGenerator from "./MemeGen/MemeGenerator"
-import { TwitterFollowButton } from 'react-twitter-embed';
 
 class App extends Component {
-    constructor() {
-        super()
-        this.state = {
-            url: "https://api.imgflip.com/get_memes",
-            loading: true,
-            allMemeImgs: null
-        }
-    }
 
     componentDidMount() {
-
-        fetch(this.state.url)
-            .then(response => response.json())
-            .then(response => {
-
-                this.setState({
-                    loading: false,
-                    allMemeImgs: response.data.memes,
-                })
-            })
-            .catch(function (error) {
-                console.log("Failure")
-                console.log(error)
-            })
+        this.props.fetchMemes()
     }
 
     render() {
+        const { loading, memeList } = this.props.memeList
+        const { memeGenerators } = this.props
         return (
             <div className="App" >
                 <Header />
-                {this.state.loading
+                {loading
                     ? <Loading />
                     : <>
-                        <MemeGenerator index={0} memes={this.state.allMemeImgs} />
-                        <MemeGenerator index={1} memes={this.state.allMemeImgs} />
-                        <MemeGenerator index={2} memes={this.state.allMemeImgs} />
+                        {
+                            memeGenerators.map((generator) => (
+                                <div key={generator.id} className="memeGen">
+                                    <MemeGenerator index={generator.id} memes={memeList} />
+                                </div>
+                            ))
+                        }
                     </>
                 }
                 <TwitterFollowButton
                     screenName={'LifeofMichal'}
                 />
             </div>
-        );
+        )
     }
 }
 
-export default App;
+// function mapStateToProps({ memeList, memeGenerators }) {
+//     return {
+//         memeList: memeList,
+//         memeGenerators: memeGenerators
+//     }
+// }
+
+// const mapDispatchToProps = {
+//     isLoading: isLoading,
+//     isNotLoading: isNotLoading,
+//     fetchMemes: fetchMemes
+// }
+
+export default connect(state =>
+    ({ memeList: state.memeList, memeGenerators: state.memeGenerators }),
+    { isNotLoading, fetchMemes })(App)

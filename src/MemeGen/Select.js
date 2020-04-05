@@ -10,7 +10,7 @@ function Select(props) {
                 <select
                     value={randomImg}
                     onChange={handleChange}
-                    name="selectedImg">
+                    name="selectedMeme">
                     {
                         filteredMemes.length
                             ? filteredMemes.map((meme) =>
